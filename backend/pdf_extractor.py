@@ -1,15 +1,29 @@
 import pymupdf
-from chunker import chunk_text
 
-pdf = pymupdf.open("data/sample.pdf")
 
-full_text = ""
+def extract_pages(pdf_path):
 
-for page in pdf:
-    full_text += page.get_text()
+    pdf = pymupdf.open(pdf_path)
 
-chunks = chunk_text(full_text)
+    pages = []
 
-for i, chunk in enumerate(chunks):
-    print(f"\n--- CHUNK {i + 1} ---")
-    print(chunk)
+    for page_number, page in enumerate(pdf, start=1):
+
+        text = page.get_text()
+
+        pages.append({
+            "page": page_number,
+            "text": text
+        })
+
+    return pages
+
+
+if __name__ == "__main__":
+
+    pages = extract_pages("data/sample.pdf")
+
+    for page in pages:
+
+        print(f"\n=== PAGE {page['page']} ===")
+        print(page["text"])
